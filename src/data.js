@@ -1,3 +1,23 @@
+const BASE_URL = import.meta.env.BASE_URL || "/";
+const withBase = (path) => {
+  const cleanBase = BASE_URL.endsWith("/") ? BASE_URL : `${BASE_URL}/`;
+  const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+  return `${cleanBase}${cleanPath}`;
+};
+
+const rewriteAbsolutePaths = (value) => {
+  if (typeof value === "string") {
+    return /^\/(media|docs|projects)\//.test(value) ? withBase(value) : value;
+  }
+  if (Array.isArray(value)) return value.map(rewriteAbsolutePaths);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, entry]) => [key, rewriteAbsolutePaths(entry)])
+    );
+  }
+  return value;
+};
+
 export const profile = {
   name: "MINGZE GUO",
   chineseName: "郭明泽",
@@ -65,7 +85,7 @@ export const gameExperience = [
   },
 ];
 
-export const projects = [
+const rawProjects = [
   {
     id: "01",
     type: "GAME DESIGN · SYSTEM / COMBAT",
@@ -168,7 +188,7 @@ export const projects = [
   },
 ];
 
-export const caseStudies = {
+const rawCaseStudies = {
   darkTower: {
     id: "01",
     title: "暗渊之塔",
@@ -797,6 +817,9 @@ export const caseStudies = {
     ],
   },
 };
+
+export const projects = rewriteAbsolutePaths(rawProjects);
+export const caseStudies = rewriteAbsolutePaths(rawCaseStudies);
 
 export const strengths = [
   {

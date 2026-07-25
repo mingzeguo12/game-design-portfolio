@@ -3,6 +3,26 @@ import { createRoot } from "react-dom/client";
 import { caseStudies, experience, gameExperience, profile, projects, strengths } from "./data";
 import "./styles.css";
 
+const BASE_URL = import.meta.env.BASE_URL || "/";
+const withBasePath = (path = "/") => {
+  const cleanBase = BASE_URL.endsWith("/") ? BASE_URL : `${BASE_URL}/`;
+  if (path === "/") return cleanBase;
+  if (path.startsWith("/#")) return `${cleanBase}${path.slice(1)}`;
+  if (!path.startsWith("/")) return path;
+  return `${cleanBase.replace(/\/$/, "")}${path}`;
+};
+const homeHref = withBasePath("/");
+const projectsHref = withBasePath("/#projects");
+
+const currentRoute = () => {
+  const basePath = new URL(BASE_URL, window.location.origin).pathname;
+  let route = window.location.pathname;
+  if (basePath !== "/" && route.startsWith(basePath)) {
+    route = `/${route.slice(basePath.length)}`;
+  }
+  return route.replace(/\/$/, "") || "/";
+};
+
 const Arrow = ({ diagonal = false }) => (
   <span className={`arrow ${diagonal ? "diagonal" : ""}`} aria-hidden="true">→</span>
 );
@@ -468,11 +488,11 @@ function RoguelikeCase() {
   return (
     <main className="case-page">
       <header className="case-header">
-        <a className="brand" href="/" aria-label="返回首页">
+        <a className="brand" href={homeHref} aria-label="返回首页">
           M<span className="brand-dot">·</span>G
         </a>
         <nav className="case-nav" aria-label="案例导航">
-          <a href="/">首页</a>
+          <a href={homeHref}>首页</a>
           <a href="#loop">核心拆解</a>
           <a href="#upgrade">系统设计</a>
           <a href="#iteration">测试迭代</a>
@@ -709,7 +729,7 @@ function RoguelikeCase() {
       </section>
 
       <footer className="case-footer">
-        <a href="/#projects">返回项目列表 <Arrow diagonal /></a>
+        <a href={projectsHref}>返回项目列表 <Arrow diagonal /></a>
         <a href={`mailto:${profile.email}`}>联系我 <Arrow diagonal /></a>
       </footer>
       {activeMedia && (
@@ -739,11 +759,11 @@ function UnityUICase() {
   return (
     <main className="case-page ui-case">
       <header className="case-header">
-        <a className="brand" href="/" aria-label="返回首页">
+        <a className="brand" href={homeHref} aria-label="返回首页">
           M<span className="brand-dot">·</span>G
         </a>
         <nav className="case-nav" aria-label="UI 案例导航">
-          <a href="/">首页</a>
+          <a href={homeHref}>首页</a>
           <a href="#brief">任务</a>
           <a href="#flow">流程</a>
           <a href="#clips">视频</a>
@@ -898,7 +918,7 @@ function UnityUICase() {
       </section>
 
       <footer className="case-footer">
-        <a href="/#projects">返回项目列表 <Arrow diagonal /></a>
+        <a href={projectsHref}>返回项目列表 <Arrow diagonal /></a>
         <a href={`mailto:${profile.email}`}>联系我 <Arrow diagonal /></a>
       </footer>
       {activeMedia && (
@@ -923,11 +943,11 @@ function VampireCase() {
   return (
     <main className="case-page vampire-case">
       <header className="case-header">
-        <a className="brand" href="/" aria-label="返回首页">
+        <a className="brand" href={homeHref} aria-label="返回首页">
           M<span className="brand-dot">·</span>G
         </a>
         <nav className="case-nav" aria-label="案例导航">
-          <a href="/">首页</a>
+          <a href={homeHref}>首页</a>
           <a href="#framework">核心拆解</a>
           <a href="#rhythm">系统分析</a>
           <a href="#transfer">设计迁移</a>
@@ -1094,7 +1114,7 @@ function VampireCase() {
       </section>
 
       <footer className="case-footer">
-        <a href="/#projects">返回项目列表 <Arrow diagonal /></a>
+        <a href={projectsHref}>返回项目列表 <Arrow diagonal /></a>
         <a href={study.pdf} target="_blank" rel="noreferrer">阅读完整 PDF <Arrow diagonal /></a>
       </footer>
     </main>
@@ -1108,11 +1128,11 @@ function DarkTowerCase() {
   return (
     <main className="case-page dark-tower-case">
       <header className="case-header">
-        <a className="brand" href="/" aria-label="返回首页">
+        <a className="brand" href={homeHref} aria-label="返回首页">
           M<span className="brand-dot">·</span>G
         </a>
         <nav className="case-nav" aria-label="暗渊之塔案例导航">
-          <a href="/">首页</a>
+          <a href={homeHref}>首页</a>
           <a href="#loop">循环</a>
           <a href="#classes">职业</a>
           <a href="#build">构筑</a>
@@ -1473,7 +1493,7 @@ function DarkTowerCase() {
       </section>
 
       <footer className="case-footer">
-        <a href="/#projects">返回项目列表 <Arrow diagonal /></a>
+        <a href={projectsHref}>返回项目列表 <Arrow diagonal /></a>
         <a href={`mailto:${profile.email}`}>联系我 <Arrow diagonal /></a>
       </footer>
       {activeMedia && (
@@ -1525,7 +1545,9 @@ function CoreLoopDiagram({ study }) {
 }
 
 function App() {
-  if (window.location.pathname === "/projects/dark-tower") {
+  const route = currentRoute();
+
+  if (route === "/projects/dark-tower") {
     return (
       <>
         <CursorGlow />
@@ -1534,7 +1556,7 @@ function App() {
     );
   }
 
-  if (window.location.pathname === "/projects/roguelike") {
+  if (route === "/projects/roguelike") {
     return (
       <>
         <CursorGlow />
@@ -1543,7 +1565,7 @@ function App() {
     );
   }
 
-  if (window.location.pathname === "/projects/vampire-survivors") {
+  if (route === "/projects/vampire-survivors") {
     return (
       <>
         <CursorGlow />
@@ -1552,7 +1574,7 @@ function App() {
     );
   }
 
-  if (window.location.pathname === "/projects/unity-ui") {
+  if (route === "/projects/unity-ui") {
     return (
       <>
         <CursorGlow />
