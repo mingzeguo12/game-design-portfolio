@@ -29,7 +29,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Build website
-        run: pnpm run build -- --base /game-design-portfolio/
+        run: pnpm exec vite build --base=/game-design-portfolio/
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
