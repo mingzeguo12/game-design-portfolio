@@ -27,17 +27,61 @@ const Arrow = ({ diagonal = false }) => (
   <span className={`arrow ${diagonal ? "diagonal" : ""}`} aria-hidden="true">→</span>
 );
 
+function LazyVideo({ src, poster, autoPlay = true, preload = "none", ...props }) {
+  const videoRef = useRef(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  useEffect(() => {
+    const node = videoRef.current;
+    if (!node) return undefined;
+
+    if (!("IntersectionObserver" in window)) {
+      setShouldLoad(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setShouldLoad(entry.isIntersecting),
+      { rootMargin: "240px 0px" }
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const node = videoRef.current;
+    if (!node || !autoPlay) return;
+    if (shouldLoad) node.play().catch(() => {});
+    else node.pause();
+  }, [autoPlay, shouldLoad]);
+
+  return (
+    <video
+      {...props}
+      ref={videoRef}
+      src={shouldLoad ? src : undefined}
+      poster={poster}
+      autoPlay={autoPlay && shouldLoad}
+      preload={shouldLoad ? preload : "none"}
+    />
+  );
+}
+
 function TacticalField() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reduceMotion.matches) return;
+
     const context = canvas.getContext("2d");
     let frame;
     let width = 0;
     let height = 0;
     let dpr = 1;
+    let lastDraw = 0;
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -50,6 +94,15 @@ function TacticalField() {
     };
 
     const draw = (time = 0) => {
+      if (document.hidden) {
+        frame = requestAnimationFrame(draw);
+        return;
+      }
+      if (time - lastDraw < 33) {
+        frame = requestAnimationFrame(draw);
+        return;
+      }
+      lastDraw = time;
       context.clearRect(0, 0, width, height);
       const t = time * 0.00022;
 
@@ -256,12 +309,12 @@ function Projects() {
                 <div className="visual-grid" />
                 {project.previewVideo ? (
                   <div className="project-gameplay">
-                    <video src={project.previewVideo} poster={project.preview} muted loop autoPlay playsInline preload="metadata" />
+                    <LazyVideo src={project.previewVideo} poster={project.preview} muted loop autoPlay playsInline />
                     {project.previewMeta && <span>{project.previewMeta}</span>}
                   </div>
                 ) : project.preview ? (
                   <div className="project-gameplay">
-                    <img src={project.preview} alt={`${project.title} 实机玩法预览`} />
+                    <img src={project.preview} alt={`${project.title} 实机玩法预览`} loading="lazy" decoding="async" />
                     {project.previewMeta && <span>{project.previewMeta}</span>}
                   </div>
                 ) : project.cover ? (
@@ -272,11 +325,13 @@ function Projects() {
                         src={spread}
                         alt=""
                         aria-hidden="true"
+                        loading="lazy"
+                        decoding="async"
                         key={spread}
                       />
                     ))}
                     <div className="project-document">
-                      <img src={project.cover} alt={`${project.title} 文档封面`} />
+                      <img src={project.cover} alt={`${project.title} 文档封面`} loading="lazy" decoding="async" />
                     </div>
                   </div>
                 ) : (
@@ -530,7 +585,7 @@ function RoguelikeCase() {
             )}
           </div>
           <div className="case-video-card">
-            <img src={study.media} alt="Combat Shuang 自动攻击与角色移动实机演示" />
+            <img src={study.media} alt="Combat Shuang 自动攻击与角色移动实机演示" loading="lazy" decoding="async" />
             <span>GAMEPLAY PREVIEW / AUTO ATTACK LOOP</span>
           </div>
         </div>
@@ -599,7 +654,7 @@ function RoguelikeCase() {
                   onClick={() => setActiveMedia({ type: "image", src: study.upgradeEvidence.image, title: study.upgradeEvidence.title })}
                   aria-label="放大查看诅咒升级截图"
                 >
-                  <img src={study.upgradeEvidence.image} alt={study.upgradeEvidence.title} />
+                  <img src={study.upgradeEvidence.image} alt={study.upgradeEvidence.title} loading="lazy" decoding="async" />
                   <span>{study.upgradeEvidence.label}</span>
                 </button>
                 <figcaption>
@@ -743,7 +798,7 @@ function RoguelikeCase() {
             {activeMedia.type === "video" ? (
               <video src={activeMedia.src} poster={activeMedia.poster} controls autoPlay playsInline preload="metadata" />
             ) : (
-              <img src={activeMedia.src} alt={activeMedia.title} />
+              <img src={activeMedia.src} alt={activeMedia.title} loading="lazy" decoding="async" />
             )}
           </div>
         </div>
@@ -788,7 +843,7 @@ function UnityUICase() {
             </div>
           </div>
           <div className="case-video-card ui-hero-cover">
-            <img src={study.cover} alt="Combat Shuang UI 主菜单封面" />
+            <img src={study.cover} alt="Combat Shuang UI 主菜单封面" loading="lazy" decoding="async" />
             <div className="ui-cover-copy">
               <em>UI CASE COVER</em>
               <div>
@@ -879,7 +934,7 @@ function UnityUICase() {
                   onClick={() => setActiveMedia({ type: "video", src: clip.src, title: clip.title })}
                   aria-label={`播放 ${clip.title}`}
                 >
-                  <video src={clip.src} muted loop autoPlay playsInline preload="metadata" />
+                  <LazyVideo src={clip.src} muted loop autoPlay playsInline />
                   <span>{clip.label}</span>
                 </button>
                 <div>
@@ -976,13 +1031,13 @@ function VampireCase() {
           </div>
           <div className="vampire-document-hero">
             <button className="vampire-doc-layer layer-left" type="button" aria-label="预览产品定位页">
-              <img src={study.spreads[0]} alt="" aria-hidden="true" />
+              <img src={study.spreads[0]} alt="" aria-hidden="true" loading="lazy" decoding="async" />
             </button>
             <button className="vampire-doc-layer layer-right" type="button" aria-label="预览目标用户页">
-              <img src={study.spreads[1]} alt="" aria-hidden="true" />
+              <img src={study.spreads[1]} alt="" aria-hidden="true" loading="lazy" decoding="async" />
             </button>
             <button className="vampire-doc-layer layer-main" type="button" aria-label="预览分析文档封面">
-              <img src={study.media} alt="Vampire Survivors 分析文档封面" />
+              <img src={study.media} alt="Vampire Survivors 分析文档封面" loading="lazy" decoding="async" />
             </button>
             <span>DOCUMENT PREVIEW / GAME ANALYSIS</span>
           </div>
@@ -1168,7 +1223,7 @@ function DarkTowerCase() {
               onClick={() => setActiveMedia({ type: "image", src: study.media.heroImage, title: "首屏主图" })}
               aria-label="放大查看首屏主图"
             >
-              <img src={study.media.heroImage} alt="暗渊之塔首屏主图，展示俯视角动作 Roguelite 原型画面" />
+              <img src={study.media.heroImage} alt="暗渊之塔首屏主图，展示俯视角动作 Roguelite 原型画面" decoding="async" />
             </button>
             <figcaption>
               <small>PLAYABLE TOP-DOWN ACTION ROGUELITE PROTOTYPE</small>
@@ -1187,7 +1242,7 @@ function DarkTowerCase() {
             <p className="case-side-note">展示从大厅准备、技能配置、路线选择，到战斗、奖励和商店的完整玩法链路。</p>
           </div>
           <div className="tower-demo-video">
-            <video src={study.media.mainVideo} controls playsInline preload="metadata" poster={study.media.heroImage} />
+            <LazyVideo src={study.media.mainVideo} controls playsInline poster={study.media.heroImage} autoPlay={false} />
             <div>
               <small>FULL GAMEPLAY FLOW</small>
               <span>Lobby / Skill Config / Route / Combat / Reward / Shop</span>
@@ -1307,7 +1362,7 @@ function DarkTowerCase() {
                   onClick={() => setActiveMedia({ type: "image", src: item.src, title: item.title })}
                   aria-label={`放大查看${item.title}`}
                 >
-                  <img src={item.src} alt={`暗渊之塔${item.title}截图`} />
+                  <img src={item.src} alt={`暗渊之塔${item.title}截图`} loading="lazy" decoding="async" />
                 </button>
                 <div>
                   <small>{String(index + 1).padStart(2, "0")}</small>
@@ -1352,7 +1407,7 @@ function DarkTowerCase() {
           </div>
           <div className="tower-combat-video-grid">
             <article className="tower-combat-video-card">
-              <video src={study.media.warriorVideo} controls playsInline preload="metadata" />
+              <LazyVideo src={study.media.warriorVideo} controls playsInline autoPlay={false} />
               <div>
                 <small>WARRIOR SKILLS</small>
                 <h3>战士技能</h3>
@@ -1360,7 +1415,7 @@ function DarkTowerCase() {
               </div>
             </article>
             <article className="tower-combat-video-card">
-              <video src={study.media.mageVideo} controls playsInline preload="metadata" />
+              <LazyVideo src={study.media.mageVideo} controls playsInline autoPlay={false} />
               <div>
                 <small>MAGE SKILLS</small>
                 <h3>法师技能</h3>
@@ -1412,7 +1467,7 @@ function DarkTowerCase() {
               onClick={() => setActiveMedia({ type: "image", src: study.media.routeMap, title: "路线地图" })}
               aria-label="放大查看路线地图"
             >
-              <img src={study.media.routeMap} alt="暗渊之塔随机路线地图截图" />
+              <img src={study.media.routeMap} alt="暗渊之塔随机路线地图截图" loading="lazy" decoding="async" />
             </button>
             <figcaption>ROUTE MAP / RISK REWARD PLANNING</figcaption>
           </figure>
@@ -1434,7 +1489,7 @@ function DarkTowerCase() {
                 onClick={() => setActiveMedia({ type: "image", src: study.media.battleReward, title: "战斗奖励" })}
                 aria-label="放大查看战斗奖励"
               >
-                <img src={study.media.battleReward} alt="暗渊之塔战斗奖励界面截图" />
+                <img src={study.media.battleReward} alt="暗渊之塔战斗奖励界面截图" loading="lazy" decoding="async" />
               </button>
               <figcaption>战斗奖励 / 圣物、金币、附魔</figcaption>
             </figure>
@@ -1445,7 +1500,7 @@ function DarkTowerCase() {
                 onClick={() => setActiveMedia({ type: "image", src: study.media.shop, title: "商店" })}
                 aria-label="放大查看商店"
               >
-                <img src={study.media.shop} alt="暗渊之塔商店界面截图" />
+                <img src={study.media.shop} alt="暗渊之塔商店界面截图" loading="lazy" decoding="async" />
               </button>
               <figcaption>商店 / 治疗、附魔、圣物商品</figcaption>
             </figure>
@@ -1504,7 +1559,7 @@ function DarkTowerCase() {
               <span>{activeMedia.title}</span>
               <button type="button" onClick={() => setActiveMedia(null)}>关闭</button>
             </div>
-            <img src={activeMedia.src} alt={activeMedia.title} />
+            <img src={activeMedia.src} alt={activeMedia.title} loading="lazy" decoding="async" />
           </div>
         </div>
       )}
