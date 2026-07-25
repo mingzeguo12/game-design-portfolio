@@ -1215,7 +1215,9 @@ function DarkTowerCase() {
             <div className="tower-hero-actions">
               <span>可试玩原型已完成</span>
               <span>完整玩法流程演示</span>
-              <a href={study.playtestUrl} target="_blank" rel="noreferrer">PLAYABLE TEST <Arrow diagonal /></a>
+              <a className="tower-playable-button" href={study.playtestUrl} target="_blank" rel="noreferrer">
+                PLAYABLE TEST <span className="tower-playable-arrow" aria-hidden="true">→</span>
+              </a>
             </div>
           </div>
           <figure className="tower-hero-real-media">
