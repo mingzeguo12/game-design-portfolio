@@ -1,4 +1,4 @@
-name: Deploy GitHub Pages
+name: Publish GitHub Pages
 
 on:
   push:
@@ -6,42 +6,46 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: github-pages
   cancel-in-progress: true
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
       - name: Enable pnpm
         run: corepack enable
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Build website
         run: pnpm exec vite build --base=/game-design-portfolio/
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Prepare static Pages files
+        run: |
+          rm -f dist/media/dark-tower-main-demo.mp4
+          rm -f dist/media/roguelike-cursed-upgrade-demo.mp4
+          rm -f dist/media/roguelike-full-gameplay-demo.mp4
+          for route in dark-tower roguelike unity-ui vampire-survivors; do
+            mkdir -p "dist/projects/$route"
+            cp dist/index.html "dist/projects/$route/index.html"
+          done
+          touch dist/.nojekyll
+      - name: Publish gh-pages branch
+        run: |
+          publish_dir="$(mktemp -d)"
+          cp -R dist/. "$publish_dir"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin gh-pages:gh-pages --depth=1
+          git switch gh-pages
+          git rm -r --ignore-unmatch .
+          cp -R "$publish_dir"/. .
+          git add -A
+          git commit -m "Deploy ${GITHUB_SHA}" || exit 0
+          git push origin gh-pages
