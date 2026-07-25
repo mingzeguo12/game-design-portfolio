@@ -1353,22 +1353,28 @@ button { font: inherit; }
   font-size: 13px;
   line-height: 1.9;
 }
-.tower-hero-actions span,
-.tower-hero-actions a {
-  padding: 12px 14px;
+.tower-hero-actions > span,
+.tower-hero-actions > a {
+  min-height: 48px;
+  padding: 0 16px;
   border: 1px solid rgba(255,255,255,.14);
+  display: inline-flex;
+  align-items: center;
   background: rgba(255,255,255,.035);
   color: rgba(235,242,235,.72);
   font: 10px "DM Mono", monospace;
   letter-spacing: .08em;
+  line-height: 1;
 }
 .tower-hero-actions a {
-  display: inline-flex;
-  align-items: center;
   gap: 12px;
   border-color: rgba(199,255,62,.42);
   background: rgba(199,255,62,.09);
   color: #e9ffad;
+}
+.tower-hero-actions a .arrow {
+  font-size: 16px;
+  line-height: 1;
 }
 .tower-hero-actions a:hover { border-color: rgba(199,255,62,.72); color: var(--accent); }
 .tower-playtest-section { padding-top: 0; }
