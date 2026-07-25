@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.pnpm-store/
+tmp/
+public/media/dark-tower-main-demo.mp4
+public/media/roguelike-full-gameplay-demo.mp4
+public/media/roguelike-cursed-upgrade-demo.mp4
+.DS_Store
+*.local
