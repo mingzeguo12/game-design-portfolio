@@ -1188,7 +1188,6 @@ function DarkTowerCase() {
         </a>
         <nav className="case-nav" aria-label="暗渊之塔案例导航">
           <a href={homeHref}>首页</a>
-          <a href="#playtest">试玩</a>
           <a href="#loop">循环</a>
           <a href="#classes">职业</a>
           <a href="#build">构筑</a>
@@ -1252,20 +1251,6 @@ function DarkTowerCase() {
               <span>Lobby / Skill Config / Route / Combat / Reward / Shop</span>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section className="case-section tower-playtest-section" id="playtest">
-        <div className="shell tower-playtest-panel">
-          <div>
-            <span className="eyebrow">PLAYABLE WEBGL TEST</span>
-            <h2>运行 prototype 测试版本</h2>
-            <p className="case-side-note">通过 itch.io 打开当前 WebGL 测试页，可以直接体验暗渊之塔的可运行原型。</p>
-          </div>
-          <a className="tower-playtest-link" href={study.playtestUrl} target="_blank" rel="noreferrer">
-            <span>OPEN ITCH.IO TEST</span>
-            <Arrow diagonal />
-          </a>
         </div>
       </section>
 

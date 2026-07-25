@@ -1390,38 +1390,6 @@ button { font: inherit; }
   transform-origin: center;
 }
 .tower-hero-actions a:hover { border-color: rgba(199,255,62,.72); color: var(--accent); }
-.tower-playtest-section { padding-top: 0; }
-.tower-playtest-panel {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, 340px);
-  gap: 28px;
-  align-items: center;
-  padding: 30px;
-  border-top: 1px solid rgba(199,255,62,.34);
-  border-bottom: 1px solid rgba(255,255,255,.12);
-  background:
-    linear-gradient(90deg, rgba(199,255,62,.11), rgba(141,115,255,.06) 48%, rgba(8,11,10,.72)),
-    rgba(9,12,11,.72);
-}
-.tower-playtest-panel h2 { margin-bottom: 10px; }
-.tower-playtest-link {
-  min-height: 82px;
-  padding: 18px 20px;
-  border: 1px solid rgba(199,255,62,.46);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: #e9ffad;
-  font: 11px "DM Mono", monospace;
-  letter-spacing: .08em;
-  background: rgba(199,255,62,.08);
-  transition: border-color .25s, color .25s, transform .25s;
-}
-.tower-playtest-link:hover {
-  border-color: rgba(199,255,62,.76);
-  color: var(--accent);
-  transform: translateY(-2px);
-}
 .tower-hero-real-media,
 .tower-route-shot,
 .tower-reward-grid figure {
@@ -2310,7 +2278,6 @@ button { font: inherit; }
   .ui-point-grid, .ui-video-grid, .ui-brief-panel { grid-template-columns: 1fr; }
   .ui-brief-head { grid-template-columns: 1fr; align-items: start; }
   .tower-loop-layout, .tower-status-layout { grid-template-columns: 1fr; }
-  .tower-playtest-panel { grid-template-columns: 1fr; }
   .tower-goal-grid, .tower-build-grid, .tower-clip-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tower-demo-layout, .tower-combat-video-grid, .tower-reward-grid, .tower-route-layout { grid-template-columns: 1fr; }
   .tower-outgame-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
