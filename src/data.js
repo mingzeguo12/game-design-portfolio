@@ -198,6 +198,7 @@ const rawCaseStudies = {
       "我负责玩法方向、职业与技能设计、构筑系统、路线与奖励节奏设计，并独立完成 Unity 原型搭建，用于验证核心玩法循环。",
     period: "个人玩法原型",
     engine: "Unity / WebGL Prototype",
+    playtestUrl: "https://yyemin.itch.io/test",
     summary:
       "《暗渊之塔》是一款俯视角动作 Roguelite 可试玩玩法原型。玩家通过局外职业成长与局内圣物、附魔、技能分支组合，逐步构建属于自己的战斗流派，并在路线选择中权衡风险、收益与资源规划。",
     media: {
