@@ -23,6 +23,8 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
       - name: Enable pnpm
         run: corepack enable
       - name: Install dependencies
