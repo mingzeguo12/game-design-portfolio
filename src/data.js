@@ -38,7 +38,7 @@ export const gameExperience = [
     games: [
       {
         title: "Final Fantasy XIV",
-        meta: "15000h+",
+        meta: "8000h+",
         achievement: "带队攻略多个版本副本，并完成 3 个绝本",
       },
     ],
