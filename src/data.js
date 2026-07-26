@@ -21,6 +21,7 @@ const rewriteAbsolutePaths = (value) => {
 export const profile = {
   name: "MINGZE GUO",
   chineseName: "郭明泽",
+  photo: withBase("/media/profile-photo.jpg"),
   role: "游戏系统策划 / UI 策划 / 游戏分析",
   status: "2026 应届本科毕业生 · 寻找游戏系统策划 / 游戏策划机会",
   location: "中国 · 可到岗",

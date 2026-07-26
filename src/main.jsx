@@ -404,8 +404,8 @@ function Profile() {
       <div className="shell profile-grid">
         <div className="portrait-wrap">
           <div className="portrait-card">
+            <img src={profile.photo} alt={`${profile.chineseName} portrait`} loading="lazy" decoding="async" />
             <div className="portrait-scan" />
-            <span>MINGZE GUO<br />GAME DESIGN PORTFOLIO</span>
           </div>
           <div className="portrait-caption">
             <span>BASED IN CHINA</span><span>OPEN TO WORK</span>
