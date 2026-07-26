@@ -22,13 +22,13 @@ export const profile = {
   name: "MINGZE GUO",
   chineseName: "郭明泽",
   photo: withBase("/media/profile-photo.jpg"),
-  role: "游戏系统策划 / UI 策划 / 游戏分析",
-  status: "2026 应届本科毕业生 · 寻找游戏系统策划 / 游戏策划机会",
+  role: "游戏系统策划 / 战斗玩法策划 / UI 策划",
+  status: "2026 应届本科毕业生 · 寻找游戏系统策划 / 战斗策划 / 玩法策划机会",
   location: "中国 · 可到岗",
   email: "16655690@qq.com",
   phone: "13180891811",
   intro:
-    "加州大学圣克鲁兹分校游戏设计本科。作品集中包含可运行的 Combat Shuang 原型、两轮 Playtest 反馈迭代，以及《Vampire Survivors》系统分析文档。关注核心循环、成长反馈、数值取舍、玩家理解成本与可验证的策划表达。",
+    "加州大学圣克鲁兹分校 Computer Science: Game Design 本科。作品集包含《暗渊之塔》可试玩动作 Roguelite 原型、Combat Shuang 核心循环与 Playtest 迭代、Combat Shuang UI 多语言流程，以及《Vampire Survivors》系统分析。关注核心循环、职业成长、构筑反馈、风险收益和可落地的策划表达。",
   education: "UC Santa Cruz · Computer Science: Game Design",
   graduation: "2019.08 — 2026.04",
 };

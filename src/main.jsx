@@ -415,7 +415,7 @@ function Profile() {
           <span className="eyebrow">02 / PROFILE</span>
           <p className="profile-lead">
             你好，我是 <strong>{profile.chineseName}</strong>。<br />
-            一名用原型、分析和反馈验证设计判断的应届游戏策划。
+            一名聚焦系统、战斗与构筑体验的应届游戏策划。
           </p>
           <p className="profile-intro">{profile.intro}</p>
           <div className="profile-meta">
@@ -425,9 +425,9 @@ function Profile() {
             <div><small>CONTACT</small><a href={`mailto:${profile.email}`}>{profile.email}</a></div>
           </div>
           <div className="metrics">
-            <div><strong>12</strong><span>随机属性词条</span></div>
-            <div><strong>6</strong><span>风险收益解锁等级</span></div>
-            <div><strong>2</strong><span>原型玩家测试轮次</span></div>
+            <div><strong>4</strong><span>完整作品集案例</span></div>
+            <div><strong>2</strong><span>可运行玩法原型</span></div>
+            <div><strong>3</strong><span>中英日 UI 语言适配</span></div>
           </div>
         </div>
       </div>
